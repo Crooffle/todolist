@@ -1,5 +1,6 @@
 todolistdata = []
 
+# Function to display the To-Do List
 def todolist(data):
     if not data:
         return []
@@ -7,21 +8,21 @@ def todolist(data):
     result = []
 
     for idx, item in enumerate(data, start=1):
-        status = "Selesai" if item["selesai"] == "selesai" else "belum selesai"
-        result.append(f"{idx}. {item['tugas']} ({status})")
+        status = "Done" if item["status"] == "done" else "Not done"
+        result.append(f"{idx}. {item['task']} ({status})")
 
     return result
 
-def inputuser():
-    tugas = input("Masukkan tugas yang ingin kamu lakukan: ")
-    selesai = "belum selesai"
-    todolistdata.append({'tugas': tugas, 'selesai': selesai})
+# Function to get user input and add task to the list
+def user_input():
+    task = input("Enter the task you want to do: ")
+    status = "not done"
+    todolistdata.append({'task': task, 'status': status})
 
-def ubahstatus(data):
+# Function to change task status
+def change_status(data):
     if not data:
-        print()
-        print("To Do list masih kosong")
-        print()
+        print("\nTo-Do list is still empty\n")
         return
 
     for item in todolist(data):
@@ -29,66 +30,59 @@ def ubahstatus(data):
         print(item)
 
     try:
-        pilihan = int(input("Masukkan nomor tugas: "))
-        if 1 <= pilihan <= len(data):
-            data[pilihan -1]['selesai'] = (
-                'selesai' if data[pilihan -1]['selesai'] == 'belum selesai' else 'belum selesai'
-            )
-            print()
-            print("Nomor Berhasil Diubah")
-            print()
-        else:
-            print("Nomor Tidak Valid")
-    except ValueError:
-        print()
-        print("Input Harus Berupa Angka")
-        print()
+        choice = int(input("Enter the task number: "))
+        if 1 <= choice <= len(data):
+            user = input("Change to Done or Not Done? (Done/Not): ")
 
-def hapus(data):
+            if user.lower() == "done":
+                data[choice - 1]['status'] = 'done' if data[choice - 1]['status'] == 'not done' else 'not done'
+            elif user.lower() == "not":
+                data[choice - 1]['status'] = 'not done' if data[choice - 1]['status'] == 'done' else 'done'
+            else:
+                print("Invalid option")
+
+            print("\nStatus updated successfully\n")
+        else:
+            print("Invalid number")
+    except ValueError:
+        print("\nInput must be a number\n")
+
+# Function to delete a task from the list
+def delete(data):
     if not data:
-        print()
-        print("To Do list masih kosong")
+        print("\nTo-Do list is still empty")
 
     for item in todolist(data):
         print()
         print(item)
 
     try:
-        pilihan = int(input("Masukkan Nomor Tugas Yang Akan Dihapus: "))
-        if 1 <= pilihan <= len(data):
-            data.pop(pilihan - 1)
-            print("Tugas Berhasil Dihapus")
+        choice = int(input("Enter the task number to delete: "))
+        if 1 <= choice <= len(data):
+            data.pop(choice - 1)
+            print("Task successfully deleted")
         else:
-            print("Nomor Tidak Valid")
+            print("Invalid number")
     except ValueError:
-        print()
-        print("Input Harus Berupa Angka")
+        print("\nInput must be a number")
 
-
+# Main loop
 while True:
-    print()
-    print()
-    print("To-Do List")
-    print()
-    print()
-    print("============================================================================================================================")
+    print("\n\nTo-Do List\n")
+    print("=================================================================")
     for item in todolist(todolistdata):
         print(item)
-    print()
-    print("============================================================================================================================")
-    print()
-    print("1. Tambahkan Tugas")
-    print("2. Ubah Status Tugas")
-    print("3. Hapus Tugas")
+    print("=================================================================")
+    print("\n1. Add Task")
+    print("2. Change Task Status")
+    print("3. Delete Task")
 
-    user = input("Pilih Perintah (1/2/3): ")
+    user = input("Select an option (1/2/3): ")
     if user == "1":
-        inputuser()
+        user_input()
     elif user == "2":
-        ubahstatus(todolistdata)
+        change_status(todolistdata)
     elif user == "3":
-        hapus(todolistdata)
+        delete(todolistdata)
     else:
-        print()
-        print("Pilihan Tidak Tersedia")
-        print()
+        print("\nInvalid option\n")
